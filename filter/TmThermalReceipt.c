@@ -104,7 +104,7 @@ typedef struct {
 
 typedef struct {
 	cups_raster_t*				p_raster;
-	cups_page_header_t			pageHeader;
+	cups_page_header2_t			pageHeader;
 
 	unsigned char*				p_pageBuffer;
 } EPTMS_JOB_INFO_T;											// Job Information parameters
@@ -138,22 +138,22 @@ static int  DoJob(EPTMS_CONFIG_T*, EPTMS_JOB_INFO_T*);
 static int  StartJob(EPTMS_CONFIG_T*, EPTMS_JOB_INFO_T*);
 static int  OpenDrawer(EPTMS_CONFIG_T*);
 static int  SoundBuzzer(EPTMS_CONFIG_T*);
-static int  EndJob(EPTMS_CONFIG_T*, EPTMS_JOB_INFO_T*, cups_page_header_t*);
+static int  EndJob(EPTMS_CONFIG_T*, EPTMS_JOB_INFO_T*, cups_page_header2_t*);
 
 static int  DoPage(EPTMS_CONFIG_T*, EPTMS_JOB_INFO_T*);
 static int  StartPage(EPTMS_CONFIG_T*);
-static int  EndPage(EPTMS_CONFIG_T*, cups_page_header_t*);
-static int  ReadRaster(cups_page_header_t*, cups_raster_t*, unsigned char*);
-static void TransferRaster(unsigned char*, unsigned char*, cups_page_header_t*, unsigned);
-static int  WriteRaster(EPTMS_CONFIG_T*, cups_page_header_t*, unsigned char*);
-static void AvoidDisturbingData(cups_page_header_t*, unsigned char*, unsigned, unsigned);
-static unsigned FindBlackRasterLineTop(cups_page_header_t*, unsigned char*);
-static unsigned FindBlackRasterLineEnd(cups_page_header_t*, unsigned char*);
-static int  WriteBand(cups_page_header_t*, unsigned char*, unsigned);
+static int  EndPage(EPTMS_CONFIG_T*, cups_page_header2_t*);
+static int  ReadRaster(cups_page_header2_t*, cups_raster_t*, unsigned char*);
+static void TransferRaster(unsigned char*, unsigned char*, cups_page_header2_t*, unsigned);
+static int  WriteRaster(EPTMS_CONFIG_T*, cups_page_header2_t*, unsigned char*);
+static void AvoidDisturbingData(cups_page_header2_t*, unsigned char*, unsigned, unsigned);
+static unsigned FindBlackRasterLineTop(cups_page_header2_t*, unsigned char*);
+static unsigned FindBlackRasterLineEnd(cups_page_header2_t*, unsigned char*);
+static int  WriteBand(cups_page_header2_t*, unsigned char*, unsigned);
 
 static int  WriteUserFile(char*, char*);
 static int  ReadUserFile(int, void*, int);
-static int  FeedPaper(EPTMS_CONFIG_T*, cups_page_header_t*, unsigned);
+static int  FeedPaper(EPTMS_CONFIG_T*, cups_page_header2_t*, unsigned);
 static int  WriteData(unsigned char*, unsigned int);
 
 /*---------------------------------------------------------------------------------------------------------------------
@@ -607,7 +607,7 @@ static int DoJob(EPTMS_CONFIG_T* p_config, EPTMS_JOB_INFO_T* p_jobInfo)
 
 	while ( EPTMD_SUCCESS == result )
 	{
-		if ( 0 == cupsRasterReadHeader( p_jobInfo->p_raster, &p_jobInfo->pageHeader ) ) {
+		if ( 0 == cupsRasterReadHeader2( p_jobInfo->p_raster, &p_jobInfo->pageHeader ) ) {
 			result = EPTMD_SUCCESS;
 			break;
 		}
@@ -755,7 +755,7 @@ static int SoundBuzzer(EPTMS_CONFIG_T* p_config)
 /*---------------------------------------------------------------------------------------------------------------------
  * End job.
  *-------------------------------------------------------------------------------------------------------------------*/
-static int EndJob(EPTMS_CONFIG_T* p_config, EPTMS_JOB_INFO_T* p_jobInfo, cups_page_header_t* p_header)
+static int EndJob(EPTMS_CONFIG_T* p_config, EPTMS_JOB_INFO_T* p_jobInfo, cups_page_header2_t* p_header)
 {
 	int result = EPTMD_SUCCESS;
 
@@ -827,7 +827,7 @@ static int StartPage(EPTMS_CONFIG_T* p_config)
 /*---------------------------------------------------------------------------------------------------------------------
  * End page.
  *-------------------------------------------------------------------------------------------------------------------*/
-static int EndPage(EPTMS_CONFIG_T* p_config, cups_page_header_t* p_header)
+static int EndPage(EPTMS_CONFIG_T* p_config, cups_page_header2_t* p_header)
 {
 	int result;
 
@@ -861,7 +861,7 @@ static int EndPage(EPTMS_CONFIG_T* p_config, cups_page_header_t* p_header)
 /*---------------------------------------------------------------------------------------------------------------------
  * Read raster data of one page.
  *-------------------------------------------------------------------------------------------------------------------*/
-static int ReadRaster(cups_page_header_t* p_header, cups_raster_t* p_raster, unsigned char* p_pageBuffer)
+static int ReadRaster(cups_page_header2_t* p_header, cups_raster_t* p_raster, unsigned char* p_pageBuffer)
 {
 	int				result = EPTMD_SUCCESS;
 	unsigned char*	p_data;
@@ -898,7 +898,7 @@ static int ReadRaster(cups_page_header_t* p_header, cups_raster_t* p_raster, uns
 /*---------------------------------------------------------------------------------------------------------------------
  * Transfer raster to page buffer for 1bit per pixel data.
  *-------------------------------------------------------------------------------------------------------------------*/
-static void TransferRaster(unsigned char* p_pageBuffer, unsigned char *p_data, cups_page_header_t* p_header, unsigned line_no)
+static void TransferRaster(unsigned char* p_pageBuffer, unsigned char *p_data, cups_page_header2_t* p_header, unsigned line_no)
 {
 	unsigned char*	p_dest   = p_pageBuffer + (EPTMD_BITS_TO_BYTES( p_header->cupsWidth ) * line_no );
 
@@ -908,7 +908,7 @@ static void TransferRaster(unsigned char* p_pageBuffer, unsigned char *p_data, c
 /*---------------------------------------------------------------------------------------------------------------------
  * Write raster data of one page.
  *-------------------------------------------------------------------------------------------------------------------*/
-static int WriteRaster(EPTMS_CONFIG_T* p_config, cups_page_header_t* p_header, unsigned char* p_pageBuffer)
+static int WriteRaster(EPTMS_CONFIG_T* p_config, cups_page_header2_t* p_header, unsigned char* p_pageBuffer)
 {
 	unsigned 		line_no = 0;
 	unsigned 		start_line_no = 0;	/* first raster line without top blank */
@@ -965,7 +965,7 @@ static int WriteRaster(EPTMS_CONFIG_T* p_config, cups_page_header_t* p_header, u
 /*---------------------------------------------------------------------------------------------------------------------
  * Avoid disturbing data.
  *-------------------------------------------------------------------------------------------------------------------*/
-static void AvoidDisturbingData(cups_page_header_t* p_header, unsigned char* p_pageBuffer, unsigned start_line_no, unsigned last_line_no)
+static void AvoidDisturbingData(cups_page_header2_t* p_header, unsigned char* p_pageBuffer, unsigned start_line_no, unsigned last_line_no)
 {
 	unsigned char*	p_data = p_pageBuffer + (EPTMD_BITS_TO_BYTES( p_header->cupsWidth ) * start_line_no);
 	unsigned long	data_size = (last_line_no - start_line_no) * EPTMD_BITS_TO_BYTES( p_header->cupsWidth );
@@ -989,7 +989,7 @@ static void AvoidDisturbingData(cups_page_header_t* p_header, unsigned char* p_p
 /*---------------------------------------------------------------------------------------------------------------------
  * Find black-raster-line top.
  *-------------------------------------------------------------------------------------------------------------------*/
-static unsigned FindBlackRasterLineTop(cups_page_header_t* p_header, unsigned char* p_pageBuffer)
+static unsigned FindBlackRasterLineTop(cups_page_header2_t* p_header, unsigned char* p_pageBuffer)
 {
 	unsigned       BytesPerLine = EPTMD_BITS_TO_BYTES( p_header->cupsWidth );
 	unsigned char* p_data = p_pageBuffer;
@@ -1011,7 +1011,7 @@ static unsigned FindBlackRasterLineTop(cups_page_header_t* p_header, unsigned ch
 /*---------------------------------------------------------------------------------------------------------------------
  * Find black-raster-line end.
  *-------------------------------------------------------------------------------------------------------------------*/
-static unsigned FindBlackRasterLineEnd(cups_page_header_t* p_header, unsigned char* p_pageBuffer)
+static unsigned FindBlackRasterLineEnd(cups_page_header2_t* p_header, unsigned char* p_pageBuffer)
 {
 	unsigned       BytesPerLine = EPTMD_BITS_TO_BYTES( p_header->cupsWidth );
 	unsigned char* p_data = p_pageBuffer + (BytesPerLine * (p_header->cupsHeight - 1));
@@ -1033,7 +1033,7 @@ static unsigned FindBlackRasterLineEnd(cups_page_header_t* p_header, unsigned ch
 /*---------------------------------------------------------------------------------------------------------------------
  * Band out.
  *-------------------------------------------------------------------------------------------------------------------*/
-static int WriteBand(cups_page_header_t* p_header, unsigned char *p_data, unsigned lines)
+static int WriteBand(cups_page_header2_t* p_header, unsigned char *p_data, unsigned lines)
 {
 	int result = EPTMD_SUCCESS;
 
@@ -1140,7 +1140,7 @@ static int ReadUserFile(int fd, void *p_buffer, int buffer_size)
 /*---------------------------------------------------------------------------------------------------------------------
  * Feed paper.
  *-------------------------------------------------------------------------------------------------------------------*/
-static int FeedPaper(EPTMS_CONFIG_T* p_config, cups_page_header_t* p_header, unsigned num_line)
+static int FeedPaper(EPTMS_CONFIG_T* p_config, cups_page_header2_t* p_header, unsigned num_line)
 {
 	unsigned char	Command[3] = { ESC, 'J', 0xFF };
 	unsigned		point = 0;
