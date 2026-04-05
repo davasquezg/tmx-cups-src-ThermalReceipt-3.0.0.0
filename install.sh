@@ -131,3 +131,8 @@ fi
 echo "Installation Completed"
 echo "Add a printer queue using OS tool, http://localhost:631, or http://127.0.0.1:631"
 echo ""
+echo "Para registrar TM-T88V por red (UB-E04):"
+echo "  sudo lpadmin -p TM-T88V -v socket://IP_IMPRESORA:9100 -P /usr/share/cups/model/EPSON/tm-t88v-rastertotmtr-180.ppd -E"
+echo "Para registrar por USB:"
+echo "  sudo lpadmin -p TM-T88V -v usb://EPSON/TM-T88V -P /usr/share/cups/model/EPSON/tm-t88v-rastertotmtr-180.ppd -E"
+echo ""

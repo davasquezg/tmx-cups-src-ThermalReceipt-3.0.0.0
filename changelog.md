@@ -4,6 +4,32 @@
 
 ---
 
+## [1.3.0] - 2026-04-05
+
+### Añadido
+
+- PPDs específicos por modelo para mayor claridad en CUPS:
+  - `tm-t88v-rastertotmtr-180.ppd` — EPSON TM-T88V (180dpi), verificado con UB-E04
+  - `tm-t88vi-rastertotmtr-180.ppd` — EPSON TM-T88VI (180dpi)
+  - `tm-t88vii-rastertotmtr-180.ppd` — EPSON TM-T88VII (180dpi)
+  - `tm-t70ii-rastertotmtr-180.ppd` — EPSON TM-T70II (180dpi)
+  - `tm-m30-rastertotmtr-203.ppd` — EPSON TM-m30 (203dpi)
+  - `tm-m30ii-rastertotmtr-203.ppd` — EPSON TM-m30II (203dpi)
+  - `tm-t20iii-rastertotmtr-203.ppd` — EPSON TM-T20III (203dpi)
+- `install.sh`: instrucciones de ejemplo para registrar TM-T88V por red y USB.
+- `readme.md`: reescrito con tabla de modelos compatibles, instrucciones de red/UB-E04,
+  tabla de opciones PPD y documentación de arquitectura del driver.
+
+### Notas técnicas
+
+- Los modelos de la familia TM-T88 (V, VI, VII) usan los mismos parámetros ESC/POS
+  (180 dpi, motion units 180/180, ancho de papel idéntico). Solo difieren en velocidad
+  de impresión y características adicionales (grayscale, Server Direct Print, etc.) que
+  no afectan al filtro raster.
+- Para conexión de red vía UB-E04 usar device URI `socket://IP:9100`.
+
+---
+
 ## [1.2.1] - 2026-04-05
 
 ### Corregido
