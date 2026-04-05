@@ -14,6 +14,14 @@ then
     exit 1
 fi
 
+# Verify the binary exists before proceeding
+if [ ! -f ./build/rastertotmtr ]
+then
+    echo "ERROR: ./build/rastertotmtr not found."
+    echo "Please run build.sh first to compile the driver."
+    exit 1
+fi
+
 SERVERROOT=$(grep '^ServerRoot' /etc/cups/cupsd.conf | awk '{print $2}')
 
 if [ -z $FILTERDIR ] || [ -z $PPDDIR ]
@@ -72,14 +80,17 @@ $INSTALL -s ./build/rastertotmtr $FILTERDIR
 echo ""
 
 echo "Installing ppd files ..."
-$INSTALL -m 755 -d $PPDDIR 
-$INSTALL -m 755 ./ppd/*.ppd $PPDDIR 
+$INSTALL -m 755 -d $PPDDIR
+$INSTALL -m 755 ./ppd/*.ppd $PPDDIR
 echo ""
 
 if [ -z $RPMBUILD ]
 then
     echo "Restarting CUPS"
-    if [ -x /etc/software/init.d/cups ]
+    if [ -x /bin/systemctl ] || [ -x /usr/bin/systemctl ]
+    then
+        systemctl reload cups 2>/dev/null || systemctl restart cups 2>/dev/null
+    elif [ -x /etc/software/init.d/cups ]
     then
         /etc/software/init.d/cups stop
         /etc/software/init.d/cups start
@@ -120,4 +131,3 @@ fi
 echo "Installation Completed"
 echo "Add a printer queue using OS tool, http://localhost:631, or http://127.0.0.1:631"
 echo ""
-

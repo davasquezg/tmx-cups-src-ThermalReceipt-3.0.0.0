@@ -4,7 +4,7 @@
 *% PPD file for TM Series Linux CUPS Printer Driver.
 
 *FormatVersion: "4.3"
-*FileVersion: "2.0"
+*FileVersion: "3.0.0.0"
 *LanguageVersion: English
 *LanguageEncoding: ISOLatin1
 *PCFileName: "EPTMBATH.PPD"
@@ -22,10 +22,11 @@
 *LandscapeOrientation: Plus90
 *VariablePaperSize: True
 *TTRasterizer: Type42
-*cupsVersion: 1.2
+*cupsVersion: 2.2
 *cupsManualCopies: True
 *cupsModelNumber: 100
 *cupsFilter: "application/vnd.cups-raster 0 rastertotmtr"
+*cupsFilter2: "application/vnd.cups-raster application/vnd.cups-raster 0 rastertotmtr"
 *cupsLanguages: "en"
 
 

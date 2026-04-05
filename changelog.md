@@ -2,8 +2,36 @@
 
 ## [Unreleased]
 
-- Mejoras menores en documentación de build.
-- Ajustes menores en mensajes de error del script `build.sh`.
+---
+
+## [1.2.0] - 2026-04-05
+
+### Añadido
+
+- Compatibilidad dual **CUPS 2.x / CUPS 3.x** en `filter/TmThermalReceipt.c`:
+  - Ruta CUPS 2.x: mantiene flujo original basado en PPD con supresión de warnings deprecated.
+  - Ruta CUPS 3.x: nueva función `GetParametersFromOptions()` que lee todas las opciones
+    directamente desde `cupsParseOptions(argv[5])` / `cupsGetOption()`, sin dependencia de
+    `cups/ppd.h` ni APIs PPD.
+  - Detección automática de versión CUPS mediante `#if CUPS_VERSION_MAJOR < 3`.
+  - Valores por defecto sensatos para la ruta sin PPD (TmxMotionUnit 180, PaperReduction Bottom,
+    BuzzerAndDrawer NotUsed, PaperCut NoCut).
+- Directiva `*cupsFilter2:` en ambos archivos PPD para compatibilidad con CUPS 2.5+/3.x.
+- Detección de `libcupsimage` como opcional en CMakeLists.txt (puede no existir en CUPS 3.x).
+- Reglas de instalación con `GNUInstallDirs` en CMakeLists.txt.
+- Verificación de existencia del binario `rastertotmtr` antes de instalar en `install.sh`.
+- Soporte para `systemctl reload cups` como método preferido de reinicio en `install.sh`.
+
+### Cambiado
+
+- `*cupsVersion:` de `1.2` a `2.2` en ambos archivos PPD.
+- `*FileVersion:` de `"2.0"` a `"3.0.0.0"` en ambos archivos PPD.
+- `CMakeLists.txt` modernizado:
+  - `cmake_minimum_required` de 2.8 a 3.10.
+  - Detección de CUPS vía `pkg-config` (`pkg_check_modules`).
+  - Estándar C99 explícito.
+  - Enlace condicional de `cupsimage` (solo si está disponible).
+- `install.sh`: prioriza `systemctl` para reinicio de CUPS en sistemas modernos (Ubuntu 25.10+).
 
 ---
 
