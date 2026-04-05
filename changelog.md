@@ -4,26 +4,29 @@
 
 ---
 
-## [1.2.2] - 2026-04-05
+## [1.3.0] - 2026-04-05
 
-### Corregido
+### Añadido
 
-- `CMakeLists.txt`: detección robusta de CUPS para entornos con CUPS snap (Ubuntu 25.10+).
-  Cuando `pkg-config cups` falla por dependencias no disponibles (`gnutls`, `avahi-client`)
-  porque el CUPS snap las absorbe internamente, el build hace fallback automático a
-  `find_library(cups)` + `find_path(cups/cups.h)`. El binario se compila y enlaza
-  correctamente en ambos entornos (CUPS deb clásico y CUPS snap).
-- `install.sh`: detección automática de CUPS snap via `snap list cups`. En entorno snap:
-  usa rutas correctas del host (`/usr/lib/cups/filter`, `/usr/share/cups/model/EPSON`),
-  recarga con `snap restart cups`, y muestra instrucciones con `cups.lpadmin` en lugar de
-  `lpadmin`. En entorno clásico: comportamiento original sin cambios.
+- PPDs específicos por modelo para mayor claridad en CUPS:
+  - `tm-t88v-rastertotmtr-180.ppd` — EPSON TM-T88V (180dpi), verificado con UB-E04
+  - `tm-t88vi-rastertotmtr-180.ppd` — EPSON TM-T88VI (180dpi)
+  - `tm-t88vii-rastertotmtr-180.ppd` — EPSON TM-T88VII (180dpi)
+  - `tm-t70ii-rastertotmtr-180.ppd` — EPSON TM-T70II (180dpi)
+  - `tm-m30-rastertotmtr-203.ppd` — EPSON TM-m30 (203dpi)
+  - `tm-m30ii-rastertotmtr-203.ppd` — EPSON TM-m30II (203dpi)
+  - `tm-t20iii-rastertotmtr-203.ppd` — EPSON TM-T20III (203dpi)
+- `install.sh`: instrucciones de ejemplo para registrar TM-T88V por red y USB.
+- `readme.md`: reescrito con tabla de modelos compatibles, instrucciones de red/UB-E04,
+  tabla de opciones PPD y documentación de arquitectura del driver.
 
-### Verificado
+### Notas técnicas
 
-- CMake falla en `pkg_check_modules(CUPS cups)` con el error exacto reportado:
-  `Package 'avahi-client', required by 'cups', not found` — fallback a `find_library`
-  funciona correctamente y produce binario idéntico.
-- Build con CUPS 2.4.12 (Ubuntu 25.10 snap) verificado por simulación.
+- Los modelos de la familia TM-T88 (V, VI, VII) usan los mismos parámetros ESC/POS
+  (180 dpi, motion units 180/180, ancho de papel idéntico). Solo difieren en velocidad
+  de impresión y características adicionales (grayscale, Server Direct Print, etc.) que
+  no afectan al filtro raster.
+- Para conexión de red vía UB-E04 usar device URI `socket://IP:9100`.
 
 ---
 
