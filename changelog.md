@@ -4,6 +4,21 @@
 
 ---
 
+## [1.2.1] - 2026-04-05
+
+### Corregido
+
+- `CMakeLists.txt`: agregado `find_library(cupsimage)` como fallback cuando `cupsimage` no tiene archivo `.pc` para pkg-config (caso común en Debian/Ubuntu actual con `libcupsimage2-dev`).
+- `CMakeLists.txt`: agregado enlace explícito con `-lm` (libmath), necesario para `math.h` en GCC 14+.
+- `TmThermalReceipt.c`: migrado `cupsRasterReadHeader()` → `cupsRasterReadHeader2()` y `cups_page_header_t` → `cups_page_header2_t` (APIs modernas disponibles desde CUPS 1.5, eliminan el warning de deprecated en CUPS 2.4.x).
+
+### Verificado
+
+- Build: GCC 14.2.0 / CMake 3.31.6 / CUPS 2.4.10 — **0 errores, 0 warnings**.
+- Dependencias dinámicas resueltas: `libcupsimage.so.2`, `libcups.so.2`, `libm.so.6`.
+
+---
+
 ## [1.2.0] - 2026-04-05
 
 ### Añadido
