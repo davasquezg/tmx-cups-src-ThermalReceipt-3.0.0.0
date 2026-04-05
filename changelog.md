@@ -4,6 +4,29 @@
 
 ---
 
+## [1.2.2] - 2026-04-05
+
+### Corregido
+
+- `CMakeLists.txt`: detección robusta de CUPS para entornos con CUPS snap (Ubuntu 25.10+).
+  Cuando `pkg-config cups` falla por dependencias no disponibles (`gnutls`, `avahi-client`)
+  porque el CUPS snap las absorbe internamente, el build hace fallback automático a
+  `find_library(cups)` + `find_path(cups/cups.h)`. El binario se compila y enlaza
+  correctamente en ambos entornos (CUPS deb clásico y CUPS snap).
+- `install.sh`: detección automática de CUPS snap via `snap list cups`. En entorno snap:
+  usa rutas correctas del host (`/usr/lib/cups/filter`, `/usr/share/cups/model/EPSON`),
+  recarga con `snap restart cups`, y muestra instrucciones con `cups.lpadmin` en lugar de
+  `lpadmin`. En entorno clásico: comportamiento original sin cambios.
+
+### Verificado
+
+- CMake falla en `pkg_check_modules(CUPS cups)` con el error exacto reportado:
+  `Package 'avahi-client', required by 'cups', not found` — fallback a `find_library`
+  funciona correctamente y produce binario idéntico.
+- Build con CUPS 2.4.12 (Ubuntu 25.10 snap) verificado por simulación.
+
+---
+
 ## [1.2.1] - 2026-04-05
 
 ### Corregido
