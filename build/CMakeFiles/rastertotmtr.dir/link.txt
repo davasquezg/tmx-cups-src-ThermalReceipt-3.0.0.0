@@ -1,0 +1,1 @@
+/usr/bin/cc -O3 -DNDEBUG -Wl,--dependency-file=CMakeFiles/rastertotmtr.dir/link.d CMakeFiles/rastertotmtr.dir/filter/TmThermalReceipt.c.o -o rastertotmtr  /usr/lib/x86_64-linux-gnu/libcupsimage.so /usr/lib/x86_64-linux-gnu/libcups.so -lm

@@ -1,0 +1,7 @@
+/home/davasquezg/Documentos/Repositorios/tmx-cups-src-ThermalReceipt-3.0.0.0/build/CMakeFiles/rastertotmtr.dir
+/home/davasquezg/Documentos/Repositorios/tmx-cups-src-ThermalReceipt-3.0.0.0/build/CMakeFiles/edit_cache.dir
+/home/davasquezg/Documentos/Repositorios/tmx-cups-src-ThermalReceipt-3.0.0.0/build/CMakeFiles/rebuild_cache.dir
+/home/davasquezg/Documentos/Repositorios/tmx-cups-src-ThermalReceipt-3.0.0.0/build/CMakeFiles/list_install_components.dir
+/home/davasquezg/Documentos/Repositorios/tmx-cups-src-ThermalReceipt-3.0.0.0/build/CMakeFiles/install.dir
+/home/davasquezg/Documentos/Repositorios/tmx-cups-src-ThermalReceipt-3.0.0.0/build/CMakeFiles/install/local.dir
+/home/davasquezg/Documentos/Repositorios/tmx-cups-src-ThermalReceipt-3.0.0.0/build/CMakeFiles/install/strip.dir
